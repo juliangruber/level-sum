@@ -5,6 +5,8 @@ Calculate sums in a LevelDB and get live updates.
 
 [![build status](https://secure.travis-ci.org/juliangruber/level-sum.png)](http://travis-ci.org/juliangruber/level-sum)
 
+[![testling badge](https://ci.testling.com/juliangruber/level-sum.png)](https://ci.testling.com/juliangruber/level-sum)
+
 ## Example
 
 Store and retrieve rating information:
