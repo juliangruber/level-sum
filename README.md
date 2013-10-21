@@ -3,6 +3,8 @@
 
 Calculate sums in a LevelDB and get live updates.
 
+[![build status](https://secure.travis-ci.org/juliangruber/level-sum.png)](http://travis-ci.org/juliangruber/level-sum)
+
 ## Example
 
 Store and retrieve rating information:
