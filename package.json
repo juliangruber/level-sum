@@ -1,0 +1,39 @@
+{
+  "name": "level-sum",
+  "description": "Calculate sums in a LevelDB and get live updates",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/juliangruber/level-sum.git"
+  },
+  "homepage": "https://github.com/juliangruber/level-sum",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "dependencies": {
+    "map-reduce": "~4.0.5"
+  },
+  "devDependencies": {
+    "tape": "~1.0.4",
+    "memdb": "0.0.3",
+    "level-sublevel": "~5.0.1",
+    "level": "~0.17.0-1",
+    "rimraf": "~2.2.2"
+  },
+  "keywords": [
+    "leveldb",
+    "level",
+    "sublevel",
+    "sum",
+    "rolling",
+    "moving",
+    "map-reduce"
+  ],
+  "author": {
+    "name": "Julian Gruber",
+    "email": "mail@juliangruber.com",
+    "url": "http://juliangruber.com"
+  },
+  "license": "MIT"
+}
