@@ -10,7 +10,10 @@ function Sum(db) {
 
   this.db = db;
   this.mapper = MapReduce(db, 'reduced', map, reduce, 0);
-  this.mapper.on('reduce', this.emit.bind(this));
+  this.mapper.on('reduce', function(key, sum) {
+    if (Array.isArray(key) && key.length == 1) key = key[0];
+    this.emit(key, sum);
+  }.bind(this));
 
   function map(_key, val, emit) {
     var key = _key.split('!')[0];
@@ -44,4 +47,3 @@ Sum.prototype.get = function(key, fn) {
     fn(null, Number(sum));
   });
 };
-
