@@ -1,6 +1,7 @@
 var MapReduce = require('map-reduce');
 var Emitter = require('events').EventEmitter;
 var inherits = require('util').inherits;
+var through = require('through');
 
 module.exports = Sum;
 
@@ -10,14 +11,9 @@ function Sum(db) {
 
   this.db = db;
   this.mapper = MapReduce(db, 'reduced', map, reduce, 0);
-  this.mapper.on('reduce', function(key, sum) {
-    if (Array.isArray(key) && key.length == 1) key = key[0];
-    this.emit(key, sum);
-  }.bind(this));
 
-  function map(_key, val, emit) {
-    var key = _key.split('!')[0];
-    emit(key, val);
+  function map(key, val, emit) {
+    emit(key.split('!'), val);
   }
 
   function reduce(acc, val) {
@@ -28,12 +24,36 @@ function Sum(db) {
 
 inherits(Sum, Emitter);
 
+Sum.prototype.follow = function(key) {
+  if (!Array.isArray(key)) key = [key];
+
+  var mapper = this.mapper;
+  var tr = through(null, end);
+  tr.writable = false;
+  mapper.on('reduce', onreduce);
+
+  function onreduce(_key, sum) {
+    for (var i = 0; i < key.length; i++) {
+      if (key[i] != _key[i]) return;
+    }
+    if (key.length != _key.length) return;
+    tr.queue(sum);
+  }
+
+  function end() {
+    mapper.removeListener('reduce', onreduce);
+  }
+
+  return tr;
+};
+
 Sum.prototype.incr = function(key, amount, cb) {
   if (typeof amount == 'undefined') amount = 1;
   if (typeof amount == 'function') {
     cb = amount;
     amount = 1;
   }
+  if (Array.isArray(key)) key = key.join('!');
 
   var rand = Date.now() + Math.random().toString(16).slice(2);
   this.db.put(key + '!' + rand, amount, cb);
@@ -41,7 +61,9 @@ Sum.prototype.incr = function(key, amount, cb) {
 
 Sum.prototype.get = function(key, fn) {
   var self = this;
-  this.mapper.get([key], function(err, sum) {
+  if (!Array.isArray(key)) key = [key];
+
+  this.mapper.get(key, function(err, sum) {
     if (err && !err.notFound) return fn(err);
     sum = sum || 0;
     fn(null, Number(sum));

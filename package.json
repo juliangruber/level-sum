@@ -12,7 +12,8 @@
     "test": "tape test/*.js"
   },
   "dependencies": {
-    "map-reduce": "~4.0.5"
+    "map-reduce": "~4.0.5",
+    "through": "~2.3.4"
   },
   "devDependencies": {
     "tape": "~1.0.4",

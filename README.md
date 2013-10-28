@@ -1,7 +1,7 @@
 
 # level-sum
 
-Calculate sums in a LevelDB and get live updates.
+Calculate multidimensional sums in a LevelDB and get live updates.
 
 [![build status](https://secure.travis-ci.org/juliangruber/level-sum.png)](http://travis-ci.org/juliangruber/level-sum)
 
@@ -9,7 +9,7 @@ Calculate sums in a LevelDB and get live updates.
 
 ## Example
 
-Store and retrieve rating information:
+Store and retrieve visit counts and query by multiple dimensions:
 
 ```js
 var level = require('level');
@@ -19,21 +19,22 @@ var Sum = require('level-sum');
 var db = sub(level(__dirname + '/db'));
 var sum = Sum(db);
 
-sum.get('visits', function(err, visits) {
-  console.log('visits: %s', visits);
-  // visits: 0
+sum.follow(['visits']).on('data', function(visits) {
+  console.log('all visits: %s', visits);
+  // all visits: 1
+  // all visits: 2
+  // all visits: 4
 });
 
-sum.on('visits', function(visits) {
-  console.log('visits: %s', visits);
-  // visits: 1
-  // visits: 2
-  // visits: 4
+sum.follow(['visits', 'home']).on('data', function(visits) {
+  console.log('home visits: %s', visits);
+  // home visits: 1
+  // home visits: 3
 });
 
-sum.incr('visits');
-setTimeout(function() { sum.incr('visits') }, 1000)
-setTimeout(function() { sum.incr('visits', 2) }, 2000)
+sum.incr(['visits', 'home']);
+setTimeout(function() { sum.incr(['visits', 'profile']) }, 1000);
+setTimeout(function() { sum.incr(['visits', 'home'], 2) }, 2000);
 ```
 
 ## API
@@ -48,13 +49,15 @@ Create a new sums db. Make sure your db has been given the powers of
 Increment the sum `key` by `amount` or `1` and optionally call `fn` when done,
 with a possible `error`.
 
+`key` can be a string or array of strings.
+
 ### Sum#get(key, fn)
 
-Get the current sum for `key`.
+Get the current sum for `key`, which can be a string or array of strings.
 
-### Sum#on(key, fn)
+### Sum#follow(key)
 
-Subscribe to updates to `key`.
+Subscribe to updates to `key`, which can be a string or array of strings.
 
 ## Installation
 

@@ -7,15 +7,20 @@ rimraf(__dirname + '/db');
 var db = sub(level(__dirname + '/db'));
 var sum = Sum(db);
 
-sum.get('visits', function(err, visits) {
-  console.log('visits: %s', visits);
+sum.follow(['visits']).on('data', function(visits) {
+  console.log('all visits: %s', visits);
+  // all visits: 1
+  // all visits: 2
+  // all visits: 4
 });
 
-sum.on('visits', function(visits) {
-  console.log('visits: %s', visits);
+sum.follow(['visits', 'home']).on('data', function(visits) {
+  console.log('home visits: %s', visits);
+  // home visits: 1
+  // home visits: 3
 });
 
-sum.incr('visits');
-setTimeout(function() { sum.incr('visits') }, 1000)
-setTimeout(function() { sum.incr('visits', 2) }, 2000)
+sum.incr(['visits', 'home']);
+setTimeout(function() { sum.incr(['visits', 'profile']) }, 1000);
+setTimeout(function() { sum.incr(['visits', 'home'], 2) }, 2000);
 

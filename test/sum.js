@@ -16,7 +16,7 @@ test('sum', function(t) {
     all.push(visits);
   });
 
-  sum.on('visits', function(visits) {
+  sum.follow('visits').on('data', function(visits) {
     all.push(visits);
 
     if (all.length == 4) {
