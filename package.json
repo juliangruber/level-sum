@@ -1,7 +1,7 @@
 {
   "name": "level-sum",
   "description": "Calculate sums in a LevelDB and get live updates",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/juliangruber/level-sum.git"
