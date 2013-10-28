@@ -17,8 +17,7 @@ function Sum(db) {
   }
 
   function reduce(acc, val) {
-    var sum = Number(acc) + Number(val);
-    return sum;
+    return Number(acc) + Number(val);
   }
 }
 
