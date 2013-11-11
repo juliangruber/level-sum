@@ -28,7 +28,6 @@ Sum.prototype.follow = function(key) {
 
   var mapper = this.mapper;
   var first = true;
-  var last;
   mapper.on('reduce', onreduce);
 
   var tr = through(null, end);
@@ -40,10 +39,7 @@ Sum.prototype.follow = function(key) {
     }
     if (key.length != _key.length) return;
     first = false;
-    if (last != sum) {
-      tr.queue(sum);
-      last = sum;
-    }
+    tr.queue(sum);
   }
 
   function end() {
@@ -52,10 +48,7 @@ Sum.prototype.follow = function(key) {
 
   this.get(key, function(err, count) {
     if (err) tr.emit('error', err);
-    if (first) {
-      if (last != count) tr.queue(count);
-      last = count;
-    }
+    if (first) tr.queue(count);
   });
 
   return tr;
