@@ -4,7 +4,7 @@ var Sum = require('..');
 var test = require('tape');
 
 test('multi', function(t) {
-  t.plan(2);
+  t.plan(1);
 
   var db = sub(level());
   var sum = Sum(db);
@@ -13,13 +13,9 @@ test('multi', function(t) {
 
   sum.follow('visits').on('data', function(visits) {
     all.push(visits);
-    if (all.length == 3) {
-      t.deepEqual(all, [1, 2, 4]);
+    if (all.length == 4) {
+      t.deepEqual(all, [0, 1, 2, 4]);
     }
-  });
-
-  sum.follow(['visits', 'profile']).on('data', function(visits) {
-    t.equal(visits, 1);
   });
 
   sum.incr(['visits', 'home']);

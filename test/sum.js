@@ -19,9 +19,9 @@ test('sum', function(t) {
   sum.follow('visits').on('data', function(visits) {
     all.push(visits);
 
-    if (all.length == 4) {
+    if (all.length == 5) {
       t.deepEqual(all, [
-        0, 1, 2, 4
+        0, 0, 1, 2, 4
       ]);
     }
   });

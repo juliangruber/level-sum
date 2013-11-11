@@ -27,21 +27,36 @@ Sum.prototype.follow = function(key) {
   if (!Array.isArray(key)) key = [key];
 
   var mapper = this.mapper;
+  var first = true;
+  var last;
+  mapper.on('reduce', onreduce);
+
   var tr = through(null, end);
   tr.writable = false;
-  mapper.on('reduce', onreduce);
 
   function onreduce(_key, sum) {
     for (var i = 0; i < key.length; i++) {
       if (key[i] != _key[i]) return;
     }
     if (key.length != _key.length) return;
-    tr.queue(sum);
+    first = false;
+    if (last != sum) {
+      tr.queue(sum);
+      last = sum;
+    }
   }
 
   function end() {
     mapper.removeListener('reduce', onreduce);
   }
+
+  this.get(key, function(err, count) {
+    if (err) tr.emit('error', err);
+    if (first) {
+      if (last != count) tr.queue(count);
+      last = count;
+    }
+  });
 
   return tr;
 };

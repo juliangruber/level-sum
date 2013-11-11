@@ -57,7 +57,8 @@ Get the current sum for `key`, which can be a string or array of strings.
 
 ### Sum#follow(key)
 
-Subscribe to updates to `key`, which can be a string or array of strings.
+Create a readable stream that emits the initial value as well as following
+updates to it. `key` can be a string or array of strings.
 
 ## Installation
 
