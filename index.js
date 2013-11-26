@@ -19,6 +19,12 @@ function Sum(db) {
   function reduce(acc, val) {
     return Number(acc) + Number(val);
   }
+  
+  this.methods = {
+    follow: { type: 'readable' },
+    incr: { type: 'async' },
+    get: { type: 'async' }
+  };
 }
 
 inherits(Sum, Emitter);
